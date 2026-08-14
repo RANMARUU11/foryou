@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Terminal - Restricted Access</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41; /* Warna hijau khas terminal */
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        #console {
+            white-space: pre-wrap;
+        }
+        .input-line {
+            display: flex;
+            align-items: center;
+        }
+        .prompt {
+            margin-right: 10px;
+        }
+        input {
+            background: transparent;
+            border: none;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            outline: none;
+            flex-grow: 1;
+            width: 100%;
+        }
+        .hidden { display: none !important; }
+        .typing { border-right: 10px solid #00ff41; animation: blink 1s step-end infinite; }
+        
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="console"></div>
+    <div class="input-line hidden" id="input-container">
+        <span class="prompt">root@system:~$</span>
+        <input type="text" id="user-input" autocomplete="off">
+    </div>
+
+    <script>
+        // --- BAGIAN YANG BISA KAMU EDIT ---
+        const targetName = "Ayu Kholilah";
+
+        function normalizeName(value) {
+            return (value || "")
+                .toLowerCase()
+                .normalize("NFC")
+                .replace(/[^a-z]/g, "")
+                .trim();
+        }
+
+        function levenshteinDistance(a, b) {
+            const dp = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+
+            for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+            for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    dp[i][j] = Math.min(
+                        dp[i - 1][j] + 1,
+                        dp[i][j - 1] + 1,
+                        dp[i - 1][j - 1] + cost
+                    );
+                }
+            }
+
+            return dp[a.length][b.length];
+        }
+
+        function isCloseToTargetName(input) {
+            const normalizedInput = normalizeName(input);
+            const normalizedTarget = normalizeName(targetName);
+
+            if (!normalizedInput) return false;
+            if (normalizedInput === normalizedTarget) return true;
+
+            const distance = levenshteinDistance(normalizedInput, normalizedTarget);
+            const maxAllowedDistance = Math.max(2, Math.ceil(normalizedTarget.length * 0.2));
+
+            return distance <= maxAllowedDistance;
+        }
+
+        const sweetMessage = `
+Halo, ${targetName}...
+
+Selamat ulang tahun yaa!
+
+gak kerasa yaaa sekarang udah 18 tahun aja. semoga di umur yang baru ini, kamu selalu dikelilingi hal-hal baik, banyak bahagianya, dan apa pun yang selama ini kamu semogakan bisa satu per satu terwujud.
+
+semoga kamuuu juga makin dewasa, makin bijaksana, tapi tetap jadi kamu yang sekarang. jangan lupaaa buat selalu bersyukur juga, karena kadang hal-hal kecil yang kita punya sekarang justru adalah hal yang paling berharga.
+
+akuu tahu akhir-akhir ini kamuu lagi sibuk banget. banyak hal yang harus kamu jalanin, banyak hal yang mungkin bikin capek, baik secara fisik maupun pikiran. Jadi di hari ulang tahunmu ini, aku berharap kamu bisa sedikit berhenti dari semua kesibukan itu dan menikmati harimu.
+
+semogaa hari ini kamuuu bisa lebih banyak ketawa, lebih banyak senyum, dan tentunya lebih banyak bahagia. semoga kamu juga selalu diberikan kesehatan, dan orang-orang yang kamu sayangi juga selalu sehat dan bahagia.
+
+maaf yaaaa kalau aku belum bisa kasih kado yang mewah atau sesuatu yang spesial banget. tapi aku harap tulisan kecil ini setidaknya bisa bikin kamu senyum, walaupun cuma sebentar.
+
+Kalau akhir-akhir ini kamu lagi capek sama banyak hal, jangan terlalu keras sama diri sendiri ya. Kamu nggak harus selalu kuat setiap saat. Kalau memang capek, istirahat dulu. Nanti kalau udah siap, lanjut lagi pelan-pelan.
+
+Tetap semangat buat semua hal yang lagi kamu perjuangin. Aku percaya kamu bisa melewati semuanya. Dan jujur, selama ini melihat kamu terus berusaha dan berkembang juga sedikit banyak jadi motivasi buat aku untuk terus berkembang dan jadi lebih baik di sekolah.
+
+Mungkin kamu nggak pernah sadar soal itu, tapi keberadaan kamu ternyata bisa memberikan pengaruh yang cukup berarti buat aku.
+
+Jadi, jangan lupa buat tetap jadi diri kamu sendiri. Kamu nggak perlu membandingkan diri kamu sama orang lain atau merasa harus menjadi seseorang yang bukan diri kamu. Kamu udah punya cara kamu sendiri untuk menjadi seseorang yang spesial.
+
+Pokoknya, semoga umur 18 ini jadi awal dari banyak hal baik buat kamu.
+
+Terima kasih ya, udah menjadi seseorang yang luar biasa.
+Dan untuk hari ini, nggak usah mikirin terlalu banyak hal dulu. Nikmati harimu, ketawa yang banyak, dan jangan lupa senyum.
+
+Selamat ulang tahun sekali lagi yaa!
+Semoga kamu bahagia hari ini, besok, dan seterusnya.
+Spero che tu possa sorridere sempre.
+
+
+- Dari aku, aku siapa ya?.
+`;
+        // ----------------------------------
+
+        const consoleDiv = document.getElementById('console');
+        const inputContainer = document.getElementById('input-container');
+        const userInput = document.getElementById('user-input');
+
+        const bootSequence = [
+            "Initializing system boot...",
+            "Loading kernel modules... [OK]",
+            "Mounting file systems... [OK]",
+            "Establishing secure connection to server... [OK]",
+            "Bypassing firewall... [DONE]",
+            " ",
+            "SYSTEM READY.",
+            "Masukkan nama orang paling spesial hari ini:"
+        ];
+
+        let i = 0;
+
+        // Fungsi untuk mengetik teks seperti hacker
+        function typeWriter(text, index, callback, speed = 30) {
+            if (index < text.length) {
+                consoleDiv.innerHTML += text.charAt(index);
+                setTimeout(() => typeWriter(text, index + 1, callback, speed), speed);
+            } else {
+                consoleDiv.innerHTML += "<br>";
+                if (callback) callback();
+            }
+        }
+
+        // Fungsi untuk menjalankan urutan booting
+        function runBootSequence() {
+            if (i < bootSequence.length) {
+                typeWriter(bootSequence[i], 0, runBootSequence, 20);
+                i++;
+            } else {
+                inputContainer.classList.remove('hidden');
+                userInput.focus();
+            }
+        }
+
+        // Memulai sistem saat web dibuka
+        window.onload = () => {
+            setTimeout(runBootSequence, 500);
+        };
+
+        // Menangkap input dari user
+        userInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const name = userInput.value.trim();
+                inputContainer.classList.add('hidden');
+
+                // Menampilkan apa yang diinput user
+                consoleDiv.innerHTML += `<span class="prompt">root@system:~$</span> ${name}<br><br>`;
+
+                typeWriter("Analyzing input database...", 0, () => {
+                    setTimeout(() => {
+                        consoleDiv.innerHTML += "Memverifikasi identitas...<br>";
+                        setTimeout(() => {
+                            if (isCloseToTargetName(name)) {
+                                consoleDiv.innerHTML += "<span style='color: #fff;'>[ ACCESS GRANTED ]</span><br><br>";
+                                setTimeout(() => {
+                                    consoleDiv.innerHTML += "Mendekripsi pesan rahasia...<br><br>";
+                                    // Menampilkan pesan utama yang romantis dengan efek ngetik pelan
+                                    typeWriter(sweetMessage, 0, null, 50);
+                                }, 1000);
+                            } else {
+                                consoleDiv.innerHTML += "<span style='color: #ff4d4d;'>[ ACCESS DENIED ] Nama tidak valid. Coba: Ayu Kholilah</span><br><br>";
+                                setTimeout(() => {
+                                    userInput.value = "";
+                                    inputContainer.classList.remove('hidden');
+                                    userInput.focus();
+                                }, 1500);
+                            }
+                        }, 1500);
+                    }, 1000);
+                }, 30);
+            }
+        });
+
+        // Supaya kalau user klik di mana aja, otomatis fokus ke input lagi
+        document.body.addEventListener('click', () => {
+            if (!inputContainer.classList.contains('hidden')) {
+                userInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
