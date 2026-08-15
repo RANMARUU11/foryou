@@ -108,31 +108,32 @@ gak kerasa yaaa sekarang udah 18 tahun aja. semoga di umur yang baru ini, kamu s
 
 semoga kamuuu juga makin dewasa, makin bijaksana, tapi tetap jadi kamu yang sekarang. jangan lupaaa buat selalu bersyukur juga, karena kadang hal-hal kecil yang kita punya sekarang justru adalah hal yang paling berharga.
 
-akuu tahu akhir-akhir ini kamuu lagi sibuk banget. banyak hal yang harus kamu jalanin, banyak hal yang mungkin bikin capek, baik secara fisik maupun pikiran. Jadi di hari ulang tahunmu ini, aku berharap kamu bisa sedikit berhenti dari semua kesibukan itu dan menikmati harimu.
+kamuu pastii belakangan ini sibukkkk banget yaa. banyak hal yang harus kamu jalanin, banyak hal yang mungkin bikin capek, baik secara fisik maupun pikiran. jadi di hari ulang tahunmu ini, aku berharap kamu bisa sedikit berhenti dari semua kesibukan itu dan menikmati harimu.
 
 semogaa hari ini kamuuu bisa lebih banyak ketawa, lebih banyak senyum, dan tentunya lebih banyak bahagia. semoga kamu juga selalu diberikan kesehatan, dan orang-orang yang kamu sayangi juga selalu sehat dan bahagia.
 
-maaf yaaaa kalau aku belum bisa kasih kado yang mewah atau sesuatu yang spesial banget. tapi aku harap tulisan kecil ini setidaknya bisa bikin kamu senyum, walaupun cuma sebentar.
+maaf yaaaa kalau aku belum bisa kasih sesuatu bikin kamu merasa WAHHH atau sesuatu yang spesial yang mungkin udah dikasih sama orang lain. tapi aku harap tulisan kecil ini setidaknya bisa bikin kamu senyum, walaupun cuma sebentar.
 
-Kalau akhir-akhir ini kamu lagi capek sama banyak hal, jangan terlalu keras sama diri sendiri ya. Kamu nggak harus selalu kuat setiap saat. Kalau memang capek, istirahat dulu. Nanti kalau udah siap, lanjut lagi pelan-pelan.
+kalau akhir-akhir ini kamuuu lagi capek sama banyak hal, jangan terlalu keras sama diri sendiri ya. kamu nggak harus selalu kuat setiap saat. kalau memang capek, istirahat dulu. nantiii kalau udah siap, lanjut lagi pelan pelan aja coy.
+tapi tanpa aku kasih teks ini kamu pastinya udah ngelakuin itu semua sihhh.
 
-Tetap semangat buat semua hal yang lagi kamu perjuangin. Aku percaya kamu bisa melewati semuanya. Dan jujur, selama ini melihat kamu terus berusaha dan berkembang juga sedikit banyak jadi motivasi buat aku untuk terus berkembang dan jadi lebih baik di sekolah.
+teruss tetap semangaaat buat semua hal yang lagi kamu perjuangin. aku percaya kamu bisa melewati semuanya. dan jujur, selama ini melihat kamu terus berusaha dan berkembang juga sedikit banyak jadi motivasi buat aku untuk terus berkembang dan jadi lebih baik di sekolah.
 
-Mungkin kamu nggak pernah sadar soal itu, tapi keberadaan kamu ternyata bisa memberikan pengaruh yang cukup berarti buat aku.
+mungkin kamu nggak pernah sadar soal itu, tapi keberadaan kamu ternyata bisa memberikan pengaruh yang cukup berarti buat aku.
 
-Jadi, jangan lupa buat tetap jadi diri kamu sendiri. Kamu nggak perlu membandingkan diri kamu sama orang lain atau merasa harus menjadi seseorang yang bukan diri kamu. Kamu udah punya cara kamu sendiri untuk menjadi seseorang yang spesial.
+jadiii, jangan lupa buat tetap jadi diri kamu sendiri. kamu nggak perlu membandingkan diri kamu sama orang lain atau merasa harus menjadi seseorang yang bukan diri kamu. Kamu udah punya cara kamu sendiri untuk menjadi seseorang yang spesial.
 
-Pokoknya, semoga umur 18 ini jadi awal dari banyak hal baik buat kamu.
+pokoknya, semoga umur 18 ini jadi awal dari banyak hal baik buat kamu.
 
-Terima kasih ya, udah menjadi seseorang yang luar biasa.
-Dan untuk hari ini, nggak usah mikirin terlalu banyak hal dulu. Nikmati harimu, ketawa yang banyak, dan jangan lupa senyum.
+makasiiii yaaa, udah menjadi seseorang yang luar biasa.
+dan untuk hari ini, nggak usah mikirin terlalu banyak hal dulu. nikmati harimu, ketawa yang banyak, dan jangan lupa senyumm.
+dan jugaa sekali lagi, maaf yaaaa.
 
-Selamat ulang tahun sekali lagi yaa!
-Semoga kamu bahagia hari ini, besok, dan seterusnya.
-Spero che tu possa sorridere sempre.
+selamat ulang tahun sekali lagi yaa!
+semoga kamu bahagia hari ini, besok, dan seterusnya.
 
 
-- Dari aku, aku siapa ya?.
+- Dari aku, aku siapa ya?
 `;
         // ----------------------------------
 
@@ -153,13 +154,22 @@ Spero che tu possa sorridere sempre.
 
         let i = 0;
 
+        // Fungsi bantu untuk auto-scroll mengikuti teks yang sedang tampil
+        function scrollToBottom() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
         // Fungsi untuk mengetik teks seperti hacker
         function typeWriter(text, index, callback, speed = 30) {
+            consoleDiv.classList.add('typing');
             if (index < text.length) {
                 consoleDiv.innerHTML += text.charAt(index);
+                scrollToBottom();
                 setTimeout(() => typeWriter(text, index + 1, callback, speed), speed);
             } else {
+                consoleDiv.classList.remove('typing');
                 consoleDiv.innerHTML += "<br>";
+                scrollToBottom();
                 if (callback) callback();
             }
         }
@@ -188,20 +198,25 @@ Spero che tu possa sorridere sempre.
 
                 // Menampilkan apa yang diinput user
                 consoleDiv.innerHTML += `<span class="prompt">root@system:~$</span> ${name}<br><br>`;
+                scrollToBottom();
 
                 typeWriter("Analyzing input database...", 0, () => {
                     setTimeout(() => {
                         consoleDiv.innerHTML += "Memverifikasi identitas...<br>";
+                        scrollToBottom();
                         setTimeout(() => {
                             if (isCloseToTargetName(name)) {
                                 consoleDiv.innerHTML += "<span style='color: #fff;'>[ ACCESS GRANTED ]</span><br><br>";
+                                scrollToBottom();
                                 setTimeout(() => {
                                     consoleDiv.innerHTML += "Mendekripsi pesan rahasia...<br><br>";
+                                    scrollToBottom();
                                     // Menampilkan pesan utama yang romantis dengan efek ngetik pelan
                                     typeWriter(sweetMessage, 0, null, 50);
                                 }, 1000);
                             } else {
                                 consoleDiv.innerHTML += "<span style='color: #ff4d4d;'>[ ACCESS DENIED ] Nama tidak valid. Coba: Ayu Kholilah</span><br><br>";
+                                scrollToBottom();
                                 setTimeout(() => {
                                     userInput.value = "";
                                     inputContainer.classList.remove('hidden');
